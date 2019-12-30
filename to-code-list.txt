@@ -1,8 +1,11 @@
 # 1. create multiplication and products arrays (DONE!)
 # 2. add functions to select and remove questions+answers (DONE!)
-# 3. add display question function 
-# 4. 
+# 3. add display question function (DONE!)
+# 4. add function to check guess (DONE!)
 #
-#
-#
-#
+# 5. ADD list of wrong answers after quiz complete; instructions 
+# on which tables to practice on
+# 6. ADD timer for test; tell time used after quiz is complete
+# 7. ADD layout and design for quiz
+# 8. ADD "start quiz" display
+# 9. ADD "quiz completed" display
