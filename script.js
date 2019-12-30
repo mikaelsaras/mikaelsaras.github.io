@@ -33,6 +33,25 @@ function removeUsedQuestionsAndAnswers() {
     availableProducts.splice(selector, 1);
 }
 
+function displayQuestion(){
+    document.querySelector('.questionField').innerHTML = question + ' = ';
+    document.querySelector('.guessField').focus();
+    document.querySelector('.guessField').value ='';
+}
+
+function startQuiz() {
+    selectQuestionAndAnswer();
+    removeUsedQuestionsAndAnswers();
+    displayQuestion();
+}
+function continueQuiz() {
+    selectQuestionAndAnswer();
+    removeUsedQuestionsAndAnswers();
+    displayQuestion();
+}
+
+startQuiz();
+
 /*
 selectQuestionAndAnswer();
 removeUsedQuestionsAndAnswers();
