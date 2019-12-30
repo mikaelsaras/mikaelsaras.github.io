@@ -1,7 +1,7 @@
 # 1. create multiplication and products arrays (DONE!)
-# 
-#
-#
+# 2. add functions to select and remove questions+answers (DONE!)
+# 3. add display question function 
+# 4. 
 #
 #
 #

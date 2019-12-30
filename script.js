@@ -13,3 +13,33 @@ let availableProducts =
  30, 54, 24, 42, 36, 48,
  20, 45, 15, 35, 40, 25, 
  56, 81, 64, 72, 49, 63];
+
+let selector = 0;
+let question = 0;
+let answer = 0;
+
+function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function selectQuestionAndAnswer() {
+    selector = getRandomNumber(0, (availableMultiplications.length - 1));
+    question = availableMultiplications[selector];
+    answer = availableProducts[selector];
+}
+
+function removeUsedQuestionsAndAnswers() {
+    availableMultiplications.splice(selector, 1);
+    availableProducts.splice(selector, 1);
+}
+
+/*
+selectQuestionAndAnswer();
+removeUsedQuestionsAndAnswers();
+
+console.log(selector)
+console.log(question);
+console.log(answer);
+console.log(availableMultiplications);
+console.log(availableProducts);
+*/
