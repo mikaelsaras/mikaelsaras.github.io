@@ -20,6 +20,7 @@ let answer = 0;
 let guess = 0;
 let wrongGuesses = [];
 let input = document.querySelector('.guessField');
+let startTime = Date.now();
 
 function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -28,11 +29,15 @@ function getRandomNumber(min, max) {
 function selectQuestionAndAnswer() {
     if (availableMultiplications.length == 0) {
         if (wrongGuesses.length == 0) {
+            let endTime = Date.now();
+            let timeUsed = msToMinutes(endTime - startTime);
             document.querySelector('.guessCorrectionMessage').innerHTML = 
-            'Färdig med diagnos! Du fick alla rätt, bra jobbat!' 
-        } else {            
+            'Färdig med diagnos! Du fick alla rätt, bra jobbat! Tid: ' + timeUsed;  
+        } else {     
+            let endTime = Date.now();
+            let timeUsed = msToMinutes(endTime - startTime);       
             document.querySelector('.guessCorrectionMessage').innerHTML = 
-            'Färdig med diagnos! Du fick ' + wrongGuesses.length + ' fel.'
+            'Färdig med diagnos! Du fick ' + wrongGuesses.length + ' fel. Tid: ' + timeUsed;
         }
     } else {
     selector = getRandomNumber(0, (availableMultiplications.length - 1));
@@ -62,6 +67,11 @@ function checkGuess() {
     }
 }
 
+function msToMinutes(millis) {
+    var minutes = Math.floor(millis / 60000);
+    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    return (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+}
 input.addEventListener('keyup',function(e){
     if (e.keyCode === 13) {
     document.querySelector('.guessButton').click();
@@ -83,13 +93,3 @@ function continueQuiz() {
 
 startQuiz();
 
-/*
-selectQuestionAndAnswer();
-removeUsedQuestionsAndAnswers();
-
-console.log(selector)
-console.log(question);
-console.log(answer);
-console.log(availableMultiplications);
-console.log(availableProducts);
-*/
