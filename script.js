@@ -25,54 +25,44 @@ let answer = 0;
 let guess = 0;
 let input = document.querySelector('.guessField');
 let startTime = Date.now();
-/*
-function getRandomNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-}
 
-function selectQuestionAndAnswer() {
-    if (availableQuestions.length == 0) {
-        if (wrongGuesses.length == 0) {
-            let endTime = Date.now();
-            let timeUsed = msToMinutes(endTime - startTime);
-            document.querySelector('.guessCorrectionMessage').innerHTML = 
-            'Färdig med diagnos! Du fick alla rätt, bra jobbat! Tid: ' + timeUsed;  
-        } else {     
-            let endTime = Date.now();
-            let timeUsed = msToMinutes(endTime - startTime);       
-            document.querySelector('.guessCorrectionMessage').innerHTML = 
-            'Färdig med diagnos! Du fick ' + wrongGuesses.length + ' fel. Tid: ' + timeUsed;
-        }
-    } else {
-    selector = getRandomNumber(0, (availableQuestions.length - 1));
-    question = availableQuestions[selector];
-    answer = availableAnswers[selector];
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
     }
+    return true;
 }
-*/
 
-function checkEndQuiz() {
-    if (Object.keys(allQuestions).length == 0) {
-        if (Object.keys(wrongGuesses).length == 0) {
-            let endTime = Date.now();
-            let timeUsed = msToMinutes(endTime - startTime);
-            document.querySelector('.guessCorrectionMessage').innerHTML = 
-            'Färdig med diagnos! Du fick alla rätt, bra jobbat! Tid: ' + timeUsed; 
-        } else {     
-            let endTime = Date.now();
-            let timeUsed = msToMinutes(endTime - startTime);       
-            document.querySelector('.guessCorrectionMessage').innerHTML = 
-            'Färdig med diagnos! Du fick ' + Object.keys(wrongGuesses).length + ' fel. Tid: ' + timeUsed;
+function countWrongAnswers(obj) {
+    let numberOfWrongAnswers = 0;
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key)) {
+            numberOfWrongAnswers += obj[key].length;
         }
     }
+    return numberOfWrongAnswers;
 }
 
-/*
-function removeUsedQuestionsAndAnswers() {
-    availableQuestions.splice(selector, 1);
-    availableAnswers.splice(selector, 1);
+
+function checkEndQuiz(_allQuestions, _wrongGuesses) {
+    let gameIsDone = false;
+
+    if (isEmpty(_allQuestions)) {
+        gameIsDone = true;
+        let textResponse = "";
+        const numberOfWrongAnswers = countWrongAnswers(_wrongGuesses);
+        if (numberOfWrongAnswers == 0) {
+            textResponse = 'Färdig med diagnos! Du fick alla rätt, bra jobbat! Tid: '; 
+        } else {
+            textResponse = 'Färdig med diagnos! Du fick ' + numberOfWrongAnswers + ' fel. Tid: ';
+        }
+        let timeUsed = msToMinutes(Date.now() - startTime);
+        document.querySelector('.guessCorrectionMessage').innerHTML = textResponse + timeUsed;
+    }  
+    
+    return gameIsDone; 
 }
-*/
 
 function selectQuestion(obj) {
     let questionSetArray = Object.keys(obj);
@@ -101,13 +91,20 @@ function displayQuestion(){
 function checkGuess() {
     guess = Number(document.querySelector('.guessField').value);
     if (guess !== answer) {
-        wrongGuesses[questionSetName].push(question);
+        setWrongAnswer(questionSetName, question);
         document.querySelector('.guessCorrectionMessage').innerHTML = 'fel!';
     } else {
         document.querySelector('.guessCorrectionMessage').innerHTML = 'rätt!';   
     }
 }
-
+function setWrongAnswer (tableName, question) {
+    if (wrongGuesses.hasOwnProperty(tableName)) {
+        wrongGuesses[tableName].push(question);
+    } else {
+//spread operator
+        wrongGuesses = {...wrongGuesses, [tableName] : [question]}
+    }
+}
 function msToMinutes(millis) {
     var minutes = Math.floor(millis / 60000);
     var seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -121,16 +118,17 @@ input.addEventListener('keyup',function(e){
 
 function startQuiz() {
     selectQuestion(allQuestions);
-    deleteQuestion();
     displayQuestion();
 }
 
 function continueQuiz() {
-    checkEndQuiz();
     checkGuess();
-    selectQuestion(allQuestions);
     deleteQuestion();
-    displayQuestion();
+    const gameIsDone = checkEndQuiz(allQuestions, wrongGuesses);
+    if (!gameIsDone) {
+        selectQuestion(allQuestions);
+        displayQuestion();
+    }
 }
 
 startQuiz();
