@@ -25,7 +25,6 @@ let answer = 0;
 let guess = 0;
 let input = document.querySelector('.guessField');
 let startTime = Date.now();
-let gameIsDone = false;
 
 function isEmpty(obj) {
     for(var key in obj) {
@@ -47,10 +46,12 @@ function countWrongAnswers(obj) {
 
 
 function checkEndQuiz(_allQuestions, _wrongGuesses) {
-    let textResponse = "";
-    const numberOfWrongAnswers = countWrongAnswers(_wrongGuesses);
+    let gameIsDone = false;
+
     if (isEmpty(_allQuestions)) {
         gameIsDone = true;
+        let textResponse = "";
+        const numberOfWrongAnswers = countWrongAnswers(_wrongGuesses);
         if (numberOfWrongAnswers == 0) {
             textResponse = 'Färdig med diagnos! Du fick alla rätt, bra jobbat! Tid: '; 
         } else {
@@ -58,7 +59,9 @@ function checkEndQuiz(_allQuestions, _wrongGuesses) {
         }
         let timeUsed = msToMinutes(Date.now() - startTime);
         document.querySelector('.guessCorrectionMessage').innerHTML = textResponse + timeUsed;
-    }   
+    }  
+    
+    return gameIsDone; 
 }
 
 function selectQuestion(obj) {
@@ -121,11 +124,11 @@ function startQuiz() {
 function continueQuiz() {
     checkGuess();
     deleteQuestion();
-    checkEndQuiz(allQuestions, wrongGuesses);
+    const gameIsDone = checkEndQuiz(allQuestions, wrongGuesses);
     if (!gameIsDone) {
         selectQuestion(allQuestions);
         displayQuestion();
-        }
+    }
 }
 
 startQuiz();
