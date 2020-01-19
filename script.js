@@ -7,22 +7,11 @@ ThreeA : ['5 * 4', '5 * 9', '5 * 3', '7 * 5', '8 * 5', '5 * 5'],
 ThreeB : ['7 * 8', '9 * 9', '8 * 8', '8 * 9', '7 * 7', '9 * 7']
 };
 
-let allAnswers = {
-OneA : [14, 10, 16, 18, 12, 8],
-OneB : [20, 32, 16, 28, 36, 24],
-TwoA : [15, 21, 12, 24, 18, 27],
-TwoB : [30, 54, 24, 42, 36, 48],
-ThreeA : [20, 45, 15, 35, 40, 25],
-ThreeB : [56, 81, 64, 72, 49, 63]
-};
-
 let wrongGuesses = {};
 
-let questionSetName = 0;
+let questionSetName = "";
 let questionIndex = 0;
-let question = 0;
-let answer = 0;
-let guess = 0;
+let question = "";
 let input = document.querySelector('.guessField');
 let startTime = Date.now();
 
@@ -70,15 +59,13 @@ function selectQuestion(obj) {
     let questionArray = allQuestions[questionSetName];
     questionIndex = Math.floor(Math.random() * questionArray.length); 
     question = allQuestions[questionSetName][questionIndex];
-    return answer = allAnswers[questionSetName][questionIndex];
 }
 
-function deleteQuestion() {
-    allQuestions[questionSetName].splice(questionIndex, 1);
-    allAnswers[questionSetName].splice(questionIndex, 1);
-    if (allQuestions[questionSetName].length < 1) {
-      delete allQuestions[questionSetName];
-      delete allAnswers[questionSetName];
+function deleteQuestion(_questionSetName, _questionIndex) {
+    allQuestions[_questionSetName].splice(_questionIndex, 1);
+
+    if (allQuestions[_questionSetName].length < 1) {
+      delete allQuestions[_questionSetName];
     }
 }
 
@@ -89,19 +76,28 @@ function displayQuestion(){
 }
 
 function checkGuess() {
-    guess = Number(document.querySelector('.guessField').value);
-    if (guess !== answer) {
-        setWrongAnswer(questionSetName, question);
-        document.querySelector('.guessCorrectionMessage').innerHTML = 'fel!';
+    const guess = Number(document.querySelector('.guessField').value);
+    const guessCorrectionMessageElement = document.querySelector('.guessCorrectionMessage');
+
+    if (isCorrectAnswer(guess, question)) {
+        guessCorrectionMessageElement.innerHTML = 'rätt!';
     } else {
-        document.querySelector('.guessCorrectionMessage').innerHTML = 'rätt!';   
+        setWrongAnswer(questionSetName, question);
+        guessCorrectionMessageElement.innerHTML = 'fel!';
     }
 }
+
+function isCorrectAnswer(_guess, _question) {
+    const numberArray =  _question.match(/\d+/g);
+    const correctAnswer= numberArray[0] * numberArray[1];
+    return _guess === correctAnswer;
+}
+
 function setWrongAnswer (tableName, question) {
     if (wrongGuesses.hasOwnProperty(tableName)) {
         wrongGuesses[tableName].push(question);
     } else {
-//spread operator
+        //spread operator
         wrongGuesses = {...wrongGuesses, [tableName] : [question]}
     }
 }
@@ -123,7 +119,7 @@ function startQuiz() {
 
 function continueQuiz() {
     checkGuess();
-    deleteQuestion();
+    deleteQuestion(questionSetName, questionIndex);
     const gameIsDone = checkEndQuiz(allQuestions, wrongGuesses);
     if (!gameIsDone) {
         selectQuestion(allQuestions);
