@@ -1,19 +1,52 @@
 let allQuestions = {
-OneA : ['2 * 7', '2 * 5', '2 * 8', '9 * 2', '6 * 2', '4 * 2'],
-OneB : ['4 * 5', '4 * 8', '4 * 4', '7 * 4', '9 * 4', '4 * 6'],
-TwoA : ['3 * 5', '3 * 7', '3 * 4', '8 * 3', '6 * 3', '9 * 3'],
-TwoB : ['6 * 5', '6 * 9', '6 * 4', '7 * 6', '6 * 6', '8 * 6'],
-ThreeA : ['5 * 4', '5 * 9', '5 * 3', '7 * 5', '8 * 5', '5 * 5'],
-ThreeB : ['7 * 8', '9 * 9', '8 * 8', '8 * 9', '7 * 7', '9 * 7']
+2 : ['2 * 7', '2 * 5', '2 * 8', '9 * 2', '6 * 2', '4 * 2'],
+3 : ['3 * 5', '3 * 7', '3 * 4', '8 * 3', '6 * 3', '9 * 3'],
+4 : ['4 * 5', '4 * 8', '4 * 4', '7 * 4', '9 * 4', '4 * 6'],
+5 : ['5 * 4', '5 * 9', '5 * 3', '7 * 5', '8 * 5', '5 * 5'],
+6 : ['6 * 5', '6 * 9', '6 * 4', '7 * 6', '6 * 6', '8 * 6'],
+"7:an till 9" : ['7 * 8', '9 * 9', '8 * 8', '8 * 9', '7 * 7', '9 * 7']
 };
 
 let wrongGuesses = {};
-
+//variable below is very ugly, better if it could be scoped or added to object allQuestions
+let usedQuizQuestionTypes = Object.keys(allQuestions);
 let questionSetName = "";
 let questionIndex = 0;
 let question = "";
 let input = document.querySelector('.guessField');
 let startTime = Date.now();
+
+function removeElement(elementId) {
+    // Removes an element from the document
+    var element = document.getElementById(elementId);
+    element.parentNode.removeChild(element);
+}
+
+function addElement(parentId, elementTag, elementId, html) {
+    // Adds an element to the document
+    var p = document.getElementById(parentId);
+    var newElement = document.createElement(elementTag);
+    newElement.setAttribute('id', elementId);
+    newElement.innerHTML = html;
+    p.appendChild(newElement);
+}
+
+function showTable() {
+    addElement("topArea", "h2", "tableHeading", "RESULTAT");
+    addElement("topArea", "table", "results", "");
+    var i = 0;
+    while (i < usedQuizQuestionTypes.length) {
+        addElement("results", "tr", "row" + i, "");
+        var questionType = usedQuizQuestionTypes[i]
+        addElement("row" + i, "td", "", questionType + ":ans");
+        var numOfWrongAnswers = 0;
+        if (wrongGuesses.hasOwnProperty(questionType) === true) {
+            numOfWrongAnswers = wrongGuesses[questionType].length;
+        }
+        addElement("row" + i, "td", "", numOfWrongAnswers + " fel");
+        i++;
+    }
+}
 
 function isEmpty(obj) {
     for(var key in obj) {
@@ -21,6 +54,10 @@ function isEmpty(obj) {
             return false;
     }
     return true;
+}
+
+function hideElement(elementId) {
+  document.getElementById(elementId).setAttribute("hidden", "true");
 }
 
 function countWrongAnswers(obj) {
@@ -33,10 +70,8 @@ function countWrongAnswers(obj) {
     return numberOfWrongAnswers;
 }
 
-
 function checkEndQuiz(_allQuestions, _wrongGuesses) {
     let gameIsDone = false;
-
     if (isEmpty(_allQuestions)) {
         gameIsDone = true;
         let textResponse = "";
@@ -48,9 +83,12 @@ function checkEndQuiz(_allQuestions, _wrongGuesses) {
         }
         let timeUsed = msToMinutes(Date.now() - startTime);
         document.querySelector('.guessCorrectionMessage').innerHTML = textResponse + timeUsed;
-    }  
-    
-    return gameIsDone; 
+        hideElement("questionContainer");
+        hideElement("submitGuessButton");
+        showTable()
+        }  
+    return gameIsDone;
+
 }
 
 function selectQuestion(obj) {
@@ -101,18 +139,23 @@ function setWrongAnswer (tableName, question) {
         wrongGuesses = {...wrongGuesses, [tableName] : [question]}
     }
 }
+
 function msToMinutes(millis) {
     var minutes = Math.floor(millis / 60000);
     var seconds = ((millis % 60000) / 1000).toFixed(0);
     return (seconds == 60 ? (minutes+1) + ":00" : minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
 }
+
 input.addEventListener('keyup',function(e){
     if (e.keyCode === 13) {
-    document.querySelector('.guessButton').click();
+    document.querySelector('.submitGuessButton').click();
   }
 });
 
 function startQuiz() {
+    removeElement("startButton");
+    document.getElementById("questionContainer").removeAttribute("hidden");
+    document.getElementById("submitGuessButton").removeAttribute("hidden");
     selectQuestion(allQuestions);
     displayQuestion();
 }
@@ -126,5 +169,3 @@ function continueQuiz() {
         displayQuestion();
     }
 }
-
-startQuiz();

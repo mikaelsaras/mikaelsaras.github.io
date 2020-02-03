@@ -9,13 +9,18 @@
 
   <body>
     <div class="quizFrame">
-        <div class="quizFrameHead"></div>
-        <div class="questionFrame">
-          <label for="guess" class="questionField"></label>
-          <input type="text" class="guessField" name="guess" autocomplete="off" autofocus>
-          <button type="submit" class="guessButton" 
-          onclick="continueQuiz()">nästa</button>
+        <div class="quizFrameHead">
+          <h1>Diagnos - Multiplikationstabell</h1>
         </div>
+        <div class="topArea" id="topArea">
+          <button class="startButton" id="startButton" onclick="startQuiz()">börja!</button>
+          <div class="questionContainer" id="questionContainer" hidden>    
+            <label for="guess" class="questionField" id="questionField"></label>
+            <input type="text" class="guessField" id="guessField" name="guess" autocomplete="off" autofocus>
+          </div>
+          <button type="submit" class="submitGuessButton" 
+          id="submitGuessButton" onclick="continueQuiz()" hidden>nästa</button>
+        </div>   
     </div>
     <p class="guessCorrectionMessage"></p>
 
