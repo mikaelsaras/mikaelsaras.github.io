@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/saraskonsulter/static/css/main.c124b6f8.css",
+    "main.js": "/saraskonsulter/static/js/main.891f81ec.js",
+    "static/js/787.cb3337a1.chunk.js": "/saraskonsulter/static/js/787.cb3337a1.chunk.js",
+    "index.html": "/saraskonsulter/index.html",
+    "main.c124b6f8.css.map": "/saraskonsulter/static/css/main.c124b6f8.css.map",
+    "main.891f81ec.js.map": "/saraskonsulter/static/js/main.891f81ec.js.map",
+    "787.cb3337a1.chunk.js.map": "/saraskonsulter/static/js/787.cb3337a1.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c124b6f8.css",
+    "static/js/main.891f81ec.js"
+  ]
+}
